@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import IntVar, ttk
 from tkinter import messagebox
 import random
 
@@ -108,8 +108,9 @@ def operateSets():
 
 window = tk.Tk()
 window.title('Actividad 4 - LenguajesFormales')
-window.geometry("800x600+0+0")
+window.geometry("800x600+100+100")
 window.minsize(800, 600)
+window.configure(bg = "gray")
 
 tabs = ttk.Notebook(window)
 tabs.pack()
@@ -143,7 +144,6 @@ tabs.add(frmHome, text = "Inicio")
 
 #Alphabet tab
 frmAlphabet = ttk.Frame(tabs, padding= '20px')
-
 
 frmAbcs = ttk.Labelframe(frmAlphabet, padding= '10px', text="Alfabetos:")
 frmAbcs.pack(fill = 'both')
@@ -199,11 +199,19 @@ txABInter.grid(row = 0, column = 1, pady = 5)
 frmABstar = ttk.Labelframe(frmOperation, padding= '10px', text="Cerradura de Estrella")
 frmABstar.grid(row = 1, column = 1, sticky = 'nsew')
 
-lblABstar = tk.Label(frmABstar, text="(A∩B):", fg="black", font=("Comic Sans MS", 10))
-lblABstar.grid( row = 0, column = 0, pady = 5)
+opt = IntVar()
+tk.Radiobutton(frmABstar, text="(A)*", variable=opt, value=1).grid(row = 0, column = 0, pady = 5)
+tk.Radiobutton(frmABstar, text="(B)*", variable=opt, value=2).grid(row = 0, column = 1, pady = 5)
+tk.Radiobutton(frmABstar, text="(AuB)*", variable=opt, value=3).grid(row = 0, column = 2, pady = 5)
+txNstars = tk.Text(frmABstar, height = 1, width = 3)
+txNstars.grid(row = 1, column = 0, pady = 5)
+tk.Button(frmABstar, text = "Generar cerradura de estrella").grid(row = 1, column = 1, pady = 5)
+
+lblABstar = tk.Label(frmABstar, text="(...)*:", fg="black", font=("Comic Sans MS", 10))
+lblABstar.grid( row = 2, column = 0, pady = 5)
 txABstar = tk.Text(frmABstar, height = 2, width = 20)
 txABstar.bind("<Key>", lambda readOnly: "break")
-txABstar.grid(row = 0, column = 1, pady = 5)
+txABstar.grid(row = 2, column = 1, pady = 5)
 
 
 
@@ -216,5 +224,5 @@ lbllanguage.pack()
 id = tabs.add(frmlanguage, text = "Lenguajes")
 
 #tabs.tab( 2, state = 'normal')
-tabs.place(relx = 0.5, rely = 0.3, anchor = tk.CENTER)
+tabs.place(relx = 0.5, rely = 0.5, anchor = tk.CENTER)
 window.mainloop()
