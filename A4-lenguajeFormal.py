@@ -3,6 +3,19 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter.tix import NoteBook
 
+#guardar abecedarios
+def guardarAbecedarios(A, B):
+    abcA = A.split()
+    abcB = B.split()
+
+    print("Abecedario A:")
+    for i in abcA:
+        print(i)
+
+    print("\nAbecedario B:")
+    for i in abcB:
+        print(i)
+    
 def operateSets():
     arbol = 1
 
@@ -36,7 +49,7 @@ lblAbc2.grid( row = 1, column = 0, pady = 5)
 inAbc2 = tk.Entry(iniInputs)
 inAbc2.grid( row = 1, column = 1, pady = 5)
 
-btnRun = tk.Button(frmHome, text = "Empezar a operar")
+btnRun = tk.Button(frmHome, text = "Empezar a operar", command=lambda: guardarAbecedarios(inAbc1.get(), inAbc2.get()))
 btnRun.pack()
 
 tabs.add(frmHome, text = "Inicio")
@@ -54,6 +67,7 @@ lbllanguage.pack()
 id = tabs.add(frmlanguage, text = "Lenguajes", state= 'disabled')
 
 #tabs.tab( 2, state = 'normal')
-
 tabs.place(relx = 0.5, rely = 0.3, anchor = tk.CENTER)
 window.mainloop()
+
+
