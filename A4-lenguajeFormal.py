@@ -2,19 +2,38 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter.tix import NoteBook
+import random
 
+#generar lenguaje
+def generarLenguaje(abc):
+    palabra = ""
+    palabras = ""
+    num = 0
+    
+    while num < 5:
+        ran = random.randint(2, 5)
+        
+        for i in range(ran):
+            palabra += random.choice(abc)
+
+        if palabra not in palabras.split():
+            palabras += " " + palabra
+            num += 1
+        palabra = ""
+
+    return palabras.split()
+
+#guardar lenguajes
+def guardarLenguajes(A, B):
+    lenA = generarLenguaje(A)
+    lenB = generarLenguaje(B)
+        
 #guardar abecedarios
 def guardarAbecedarios(A, B):
     abcA = A.split()
     abcB = B.split()
 
-    print("Abecedario A:")
-    for i in abcA:
-        print(i)
-
-    print("\nAbecedario B:")
-    for i in abcB:
-        print(i)
+    guardarLenguajes(abcA, abcB)
     
 def operateSets():
     arbol = 1
