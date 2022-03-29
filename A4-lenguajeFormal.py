@@ -3,11 +3,52 @@ from tkinter import ttk
 from tkinter import messagebox
 import random
 
-#abecedarios y lenguajes
-abcA = ""
-abcB = ""
-lenA = ""
-lenB = ""
+#intersecar abecedarios
+def intersecarAbc(A, B):
+    interseccionAbc = []
+    for sim in A:
+        if sim in B:
+            interseccionAbc.append(sim)
+    if len(interseccionAbc) == 0:
+        txABInter.insert(1.0, "&")
+    else:
+        txABInter.insert(1.0, interseccionAbc)
+
+#restar abecedarios
+def restarAbc(A, B):
+    abcAMenosB = []
+    abcBMenosA = []
+    for sim in A:
+        if sim not in B:
+            abcAMenosB.append(sim)
+            
+    for sim in B:
+        if sim not in A:
+            abcBMenosA.append(sim)
+
+    if len(abcAMenosB) == 0:
+        txABminus.insert(1.0, "&")
+    else:
+        txABminus.insert(1.0, abcAMenosB)
+        
+    if len(abcBMenosA) == 0:
+        txBAminus.insert(1.0, "&")
+    else:
+        txBAminus.insert(1.0, abcBMenosA)
+            
+#unir abecedarios
+def unirAbc(A, B):
+    unionAbc = A[:]
+    for sim in B:
+        if sim not in unionAbc:
+            unionAbc.append(sim)
+    txABUnion.insert(1.0, unionAbc)
+
+#operar abecedarios
+def operarAbc(A, B):
+    unirAbc(A, B)
+    restarAbc(A, B)
+    intersecarAbc(A, B)
 
 #generar lenguaje
 def generarLenguaje(abc):
@@ -30,15 +71,34 @@ def generarLenguaje(abc):
 
 #guardar lenguajes
 def guardarLenguajes(A, B):
+    global lenA
     lenA = generarLenguaje(A)
     lenB = generarLenguaje(B)
+
+    for i in lenA:
+        print(i)
+    for i in lenB:
+        print(i)
+
+#limpiar campos
+def limpiarCampos():
+    txAbcA.delete("1.0", "end")
+    txAbcB.delete("1.0", "end")
+    txABUnion.delete("1.0", "end")
+    txBAminus.delete("1.0", "end")
+    txABminus.delete("1.0", "end")
+    txABInter.delete("1.0", "end")
+
         
 #guardar abecedarios
 def guardarAbecedarios(A, B):
     abcA = A.split()
     abcB = B.split()
-    txAbcA.insert(1.0, abcA)
     guardarLenguajes(abcA, abcB)
+    limpiarCampos()
+    operarAbc(abcA, abcB)
+    txAbcA.insert(1.0, abcA)
+    txAbcB.insert(1.0, abcB)
     tabs.tab( 1, state = 'normal')
     tabs.tab( 2, state = 'normal')
     tabs.select(1)
@@ -141,7 +201,7 @@ frmABstar.grid(row = 1, column = 1, sticky = 'nsew')
 
 lblABstar = tk.Label(frmABstar, text="(A∩B):", fg="black", font=("Comic Sans MS", 10))
 lblABstar.grid( row = 0, column = 0, pady = 5)
-txABstar = tk.Text(frmABIntercept, height = 2, width = 20)
+txABstar = tk.Text(frmABstar, height = 2, width = 20)
 txABstar.bind("<Key>", lambda readOnly: "break")
 txABstar.grid(row = 0, column = 1, pady = 5)
 
