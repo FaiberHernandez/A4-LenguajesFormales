@@ -100,8 +100,6 @@ def cerraduraEstrella(valor, cantidad, A, B, union):
         
     cerradura = generarLenguaje(vector, int(cantidad))
     txABstar.insert(1.0, cerradura)
-    for i in cerradura:
-        print()
         
 #guardar abecedarios
 def guardarAbecedarios(A, B):
