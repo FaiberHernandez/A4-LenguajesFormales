@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import IntVar, ttk
 from tkinter import messagebox
 import random
+import itertools
+from itertools import product
 
 #intersecar abecedarios
 def intersecarAbc(A, B):
@@ -51,12 +53,12 @@ def operarAbc(A, B):
     intersecarAbc(A, B)
 
 #generar lenguaje
-def generarLenguaje(abc):
+def generarLenguaje(abc, cant):
     palabra = ""
     palabras = ""
     num = 0
     
-    while num < 5:
+    while num < cant:
         ran = random.randint(2, 5)
         
         for i in range(ran):
@@ -72,13 +74,8 @@ def generarLenguaje(abc):
 #guardar lenguajes
 def guardarLenguajes(A, B):
     global lenA
-    lenA = generarLenguaje(A)
-    lenB = generarLenguaje(B)
-
-    for i in lenA:
-        print(i)
-    for i in lenB:
-        print(i)
+    lenA = generarLenguaje(A, 5)
+    lenB = generarLenguaje(B, 5)
 
 #limpiar campos
 def limpiarCampos():
@@ -88,7 +85,23 @@ def limpiarCampos():
     txBAminus.delete("1.0", "end")
     txABminus.delete("1.0", "end")
     txABInter.delete("1.0", "end")
+    txABstar.delete("1.0", "end")
 
+#cerradura estrella
+def cerraduraEstrella(valor, cantidad, A, B, union):
+    txABstar.delete("1.0", "end")
+    vector = []
+    if valor == 1:
+        vector = A.split()
+    elif valor == 2:
+        vector = B.split()
+    else:
+        vector = union.split()
+        
+    cerradura = generarLenguaje(vector, int(cantidad))
+    txABstar.insert(1.0, cerradura)
+    for i in cerradura:
+        print()
         
 #guardar abecedarios
 def guardarAbecedarios(A, B):
@@ -102,7 +115,7 @@ def guardarAbecedarios(A, B):
     tabs.tab( 1, state = 'normal')
     tabs.tab( 2, state = 'normal')
     tabs.select(1)
-    
+        
 def operateSets():
     arbol = 1
 
@@ -205,11 +218,11 @@ tk.Radiobutton(frmABstar, text="(B)*", variable=opt, value=2).grid(row = 0, colu
 tk.Radiobutton(frmABstar, text="(AuB)*", variable=opt, value=3).grid(row = 0, column = 2, pady = 5)
 txNstars = tk.Text(frmABstar, height = 1, width = 3)
 txNstars.grid(row = 1, column = 0, pady = 5)
-tk.Button(frmABstar, text = "Generar cerradura de estrella").grid(row = 1, column = 1, pady = 5)
+tk.Button(frmABstar, text = "Generar cerradura de estrella", command=lambda: cerraduraEstrella(opt.get(), txNstars.get("1.0", "end"), txAbcA.get("1.0", "end"), txAbcB.get("1.0", "end"), txABUnion.get("1.0", "end"))).grid(row = 1, column = 1, pady = 5)
 
 lblABstar = tk.Label(frmABstar, text="(...)*:", fg="black", font=("Comic Sans MS", 10))
 lblABstar.grid( row = 2, column = 0, pady = 5)
-txABstar = tk.Text(frmABstar, height = 2, width = 20)
+txABstar = tk.Text(frmABstar, height = 5, width = 20)
 txABstar.bind("<Key>", lambda readOnly: "break")
 txABstar.grid(row = 2, column = 1, pady = 5)
 
