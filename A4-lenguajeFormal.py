@@ -4,6 +4,7 @@ from tkinter import messagebox
 import random
 import itertools
 import re
+import math
 
 #potenciar
 def potenciar(valor, potencia, A, B, union):
@@ -22,7 +23,29 @@ def potenciar(valor, potencia, A, B, union):
         vector = B.split()
     else:
         vector = union.split()
-    
+
+    if len(vector) == 0:
+        messagebox.showwarning(message="Por favor primero genere los lenguajes.", title="Advertencia")
+        txNPow.configure( bg = 'indian red')
+        return
+
+    vecPoten = []
+    potencia = int(potencia)
+    if potencia == 0:
+        txABPow.insert(1.0, "ø")
+    elif potencia == 1:
+        txABPow.insert(1.0, vector)
+    else:
+        aux = vector
+        vecPoten.extend(vector)
+        for i in range(potencia - 1):      
+            concatenacion = []
+            for i in aux:
+                for j in vector: 
+                    concatenacion.append(i+j)
+            vecPoten.extend(concatenacion)
+            aux = concatenacion
+        txABPow.insert(1.0, vecPoten)
     txNPow.configure(bg = 'spring green')
     
 
@@ -136,9 +159,21 @@ def generarLenguaje(abc, cant):
     palabra = ""
     palabras = ""
     num = 0
-    
+
+    rangoMax = 2
+    palPos = len(abc)
+    cantSim = len(abc)
+    if cantSim == 0:
+        return "ø"
+    elif cantSim == 1:
+        rangoMax = cant + 1
+    else:
+        while palPos < cant:
+            rangoMax += 1
+            palPos += pow(cantSim, rangoMax)
+
     while num < cant:
-        ran = random.randint(2, 5)
+        ran = random.randint(2, rangoMax)
         
         for i in range(ran):
             palabra += random.choice(abc)
@@ -159,6 +194,7 @@ def limpiarCamposLen():
     txLangBAminus.delete("1.0", "end")
     txLangABInter.delete("1.0", "end")
     txLangABConcat.delete("1.0", "end")
+    txABPow.delete("1.0", "end")
     txNPow.configure( bg = 'indian red')
     txWordsPerLang.configure( bg = 'indian red')
 
@@ -209,9 +245,12 @@ def cerraduraEstrella(valor, cantidad, A, B, union):
         vector = B.split()
     else:
         vector = union.split()
-        
-    cerradura = generarLenguaje(vector, int(cantidad))
-    txABstar.insert(1.0, cerradura)
+
+    if int(cantidad) == 0:
+        txABstar.insert(1.0, "ø")
+    else:
+        cerradura = generarLenguaje(vector, int(cantidad))
+        txABstar.insert(1.0, cerradura)
     txNstars.configure( bg = 'spring green')
         
 #guardar abecedarios
