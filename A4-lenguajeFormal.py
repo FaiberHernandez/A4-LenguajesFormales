@@ -12,7 +12,7 @@ def intersecarAbc(A, B):
         if sim in B:
             interseccionAbc.append(sim)
     if len(interseccionAbc) == 0:
-        txABInter.insert(1.0, "&")
+        txABInter.insert(1.0, "¢")
     else:
         txABInter.insert(1.0, interseccionAbc)
 
@@ -29,12 +29,12 @@ def restarAbc(A, B):
             abcBMenosA.append(sim)
 
     if len(abcAMenosB) == 0:
-        txABminus.insert(1.0, "&")
+        txABminus.insert(1.0, "¢")
     else:
         txABminus.insert(1.0, abcAMenosB)
         
     if len(abcBMenosA) == 0:
-        txBAminus.insert(1.0, "&")
+        txBAminus.insert(1.0, "¢")
     else:
         txBAminus.insert(1.0, abcBMenosA)
             
@@ -117,21 +117,24 @@ def guardarAbecedarios(A, B):
 def operateSets():
     arbol = 1
 
+#Cracion de la ventana principal
 window = tk.Tk()
 window.title('Actividad 4 - LenguajesFormales')
-window.geometry("800x600+100+100")
-window.minsize(800, 600)
+window.geometry("1024x800+50+50")
+window.minsize(1000,800)
 window.configure(bg = "gray")
 
+#creando las pestañas
 tabs = ttk.Notebook(window)
 tabs.pack()
 
 #Home tab
 frmHome = tk.Frame(tabs, padx = 20 , pady = 20)
+tabs.add(frmHome, text = "Inicio")
 
 lblWelcome = tk.Label(frmHome, text="Bienvenido a la Actividad de lenguaje formal.", fg="blue", font=("Comic Sans MS", 15) )
 lblWelcome.pack()
-lblMsgHome = tk.Label(frmHome, text="A continuación ingrese dos alfabetos.\nCada simbolo separado por un espacio.", fg="black", font=("Comic Sans MS", 12))
+lblMsgHome = tk.Label(frmHome, text="A continuación ingrese dos alfabetos.\nCada simbolo separado por un espacio. \n para vacio use: ¢ (alt + 155)", fg="black", font=("Comic Sans MS", 12))
 lblMsgHome.pack()
 
 #Home Inputs
@@ -151,10 +154,9 @@ inAbc2.grid( row = 1, column = 1, pady = 5)
 btnRun = tk.Button(frmHome, text = "Empezar a operar", command=lambda: guardarAbecedarios(inAbc1.get(), inAbc2.get()))
 btnRun.pack()
 
-tabs.add(frmHome, text = "Inicio")
-
 #Alphabet tab
 frmAlphabet = ttk.Frame(tabs, padding= '20px')
+tabs.add(frmAlphabet, text = "Alfabetos")
 
 frmAbcs = ttk.Labelframe(frmAlphabet, padding= '10px', text="Alfabetos:")
 frmAbcs.pack(fill = 'both')
@@ -183,7 +185,7 @@ txABUnion = tk.Text(frmABUnion, height = 2, width = 20)
 txABUnion.bind("<Key>", lambda readOnly: "break")
 txABUnion.grid(row = 0, column = 1, pady = 5)
 
-frmABDif = ttk.Labelframe(frmOperation, padding= '10px', text="Diferencia (A-B) & (B-A)")
+frmABDif = ttk.Labelframe(frmOperation, padding= '10px', text="Diferencia (A-B) y (B-A)")
 frmABDif.grid(row = 0, column = 1, sticky = 'nsew')
 
 lblABminus = tk.Label(frmABDif, text="(A-B):", fg="black", font=("Comic Sans MS", 10))
@@ -214,7 +216,7 @@ opt = IntVar()
 tk.Radiobutton(frmABstar, text="(A)*", variable=opt, value=1).grid(row = 0, column = 0, pady = 5)
 tk.Radiobutton(frmABstar, text="(B)*", variable=opt, value=2).grid(row = 0, column = 1, pady = 5)
 tk.Radiobutton(frmABstar, text="(AuB)*", variable=opt, value=3).grid(row = 0, column = 2, pady = 5)
-txNstars = tk.Text(frmABstar, height = 1, width = 3)
+txNstars = tk.Text(frmABstar, height = 1, width = 5)
 txNstars.grid(row = 1, column = 0, pady = 5)
 tk.Button(frmABstar, text = "Generar cerradura de estrella", command=lambda: cerraduraEstrella(opt.get(), txNstars.get("1.0", "end"), txAbcA.get("1.0", "end"), txAbcB.get("1.0", "end"), txABUnion.get("1.0", "end"))).grid(row = 1, column = 1, pady = 5)
 
@@ -222,17 +224,126 @@ lblABstar = tk.Label(frmABstar, text="(...)*:", fg="black", font=("Comic Sans MS
 lblABstar.grid( row = 2, column = 0, pady = 5)
 txABstar = tk.Text(frmABstar, height = 5, width = 20)
 txABstar.bind("<Key>", lambda readOnly: "break")
-txABstar.grid(row = 2, column = 1, pady = 5)
+txABstar.grid(row = 2, column = 1, pady = 5,columnspan = 2)
 
 
-
-tabs.add(frmAlphabet, text = "Alfabetos")
 
 #Language tab
 frmlanguage= ttk.Frame(tabs, padding= '20px')
-lbllanguage = tk.Label(frmlanguage, text="Lenguajes", fg="black")
-lbllanguage.pack()
-id = tabs.add(frmlanguage, text = "Lenguajes")
+tabs.add(frmlanguage, text = "Lenguajes")
+
+frmLangs =ttk.Labelframe(frmlanguage, padding= '10px', text="Sea LA y LB lenguajes:")
+frmLangs.pack(fill = 'both')
+
+
+lblWordsPerLang = tk.Label(frmLangs, text="Inserte la cantidad de \n palabras para los lenguajes:", fg="red", font=("Comic Sans MS", 10))
+lblWordsPerLang.grid( row = 0, column = 0, pady = 5)
+txWordsPerLang = tk.Text(frmLangs, height = 1, width = 10)
+txWordsPerLang.grid(row = 0, column = 1, pady = 5)
+
+tk.Button(frmLangs, text = "Generar lenguajes").grid(row = 0, column = 2, pady = 5)
+
+
+lblLangA = tk.Label(frmLangs, text="LA: ", fg="black", font=("Comic Sans MS", 10))
+lblLangA.grid( row = 1, column = 0, pady = 5)
+txLangA = tk.Text(frmLangs, height = 2, width = 20)
+txLangA.bind("<Key>", lambda readOnly: "break")
+txLangA.grid(row = 1, column = 1, pady = 5)
+
+lblLangACardinal = tk.Label(frmLangs, text="Cardinal: ", fg="green", font=("Comic Sans MS", 10))
+lblLangACardinal.grid( row = 2, column = 0)
+
+lblLangB = tk.Label(frmLangs, text="LB: ", fg="black", font=("Comic Sans MS", 10))
+lblLangB.grid( row = 1, column = 2, pady = 5)
+txLangB = tk.Text(frmLangs, height = 2, width = 20)
+txLangB.bind("<Key>", lambda readOnly: "break")
+txLangB.grid(row = 1, column = 3, pady = 5)
+
+lblLangBCardinal = tk.Label(frmLangs, text="Cardinal: ", fg="green", font=("Comic Sans MS", 10))
+lblLangBCardinal.grid( row = 2, column = 2)
+
+
+frmOperationLang = ttk.Frame(frmlanguage, padding= '5px')
+frmOperationLang.pack()
+
+frmLangABUnion = ttk.Labelframe(frmOperationLang, padding= '10px', text="Unión (LA+LB)")
+frmLangABUnion.grid(row = 0, column = 0, padx = 2, sticky = 'nsew')
+
+lblLangABUnion = tk.Label(frmLangABUnion, text="(LA+LB):", fg="black", font=("Comic Sans MS", 10))
+lblLangABUnion.grid( row = 0, column = 0, pady = 5)
+txLangABUnion = tk.Text(frmLangABUnion, height = 2, width = 20)
+txLangABUnion.bind("<Key>", lambda readOnly: "break")
+txLangABUnion.grid(row = 0, column = 1, pady = 5)
+
+frmLangABDif = ttk.Labelframe(frmOperationLang, padding= '10px', text="Diferencia (LA-LB) y (LB-LA)")
+frmLangABDif.grid(row = 0, column = 1, sticky = 'nsew')
+
+lblLangABminus = tk.Label(frmLangABDif, text="(LA-LB):", fg="black", font=("Comic Sans MS", 10))
+lblLangABminus.grid( row = 0, column = 0, pady = 5)
+txLangABminus = tk.Text(frmLangABDif, height = 2, width = 20)
+txLangABminus.bind("<Key>", lambda readOnly: "break")
+txLangABminus.grid(row = 0, column = 1, pady = 5)
+
+lblLangBAminus = tk.Label(frmLangABDif, text="(LB-LA):", fg="black", font=("Comic Sans MS", 10))
+lblLangBAminus.grid( row = 1, column = 0, pady = 5)
+txLangBAminus = tk.Text(frmLangABDif, height = 2, width = 20)
+txLangBAminus.bind("<Key>", lambda readOnly: "break")
+txLangBAminus.grid(row = 1, column = 1, pady = 5)
+
+frmLangABIntercept = ttk.Labelframe(frmOperationLang, padding= '10px', text="Intercepción (LA∩LB)")
+frmLangABIntercept.grid(row = 1, column = 0, sticky = 'nsew', padx = 2)
+
+lblLangABInter = tk.Label(frmLangABIntercept, text="(LA∩LB):", fg="black", font=("Comic Sans MS", 10))
+lblLangABInter.grid( row = 0, column = 0, pady = 5)
+txLangABInter = tk.Text(frmLangABIntercept, height = 2, width = 20)
+txLangABInter.bind("<Key>", lambda readOnly: "break")
+txLangABInter.grid(row = 0, column = 1, pady = 5)
+
+frmLangABConcat = ttk.Labelframe(frmOperationLang, padding= '10px', text="Cocatenación (LA.LB)")
+frmLangABConcat.grid(row = 1, column = 1, sticky = 'nsew', padx = 2)
+
+lblLangABConcat = tk.Label(frmLangABConcat, text="(LALB):", fg="black", font=("Comic Sans MS", 10))
+lblLangABConcat.grid( row = 0, column = 0, pady = 5)
+txLangABConcat = tk.Text(frmLangABConcat, height = 2, width = 20)
+txLangABConcat.bind("<Key>", lambda readOnly: "break")
+txLangABConcat.grid(row = 0, column = 1, pady = 5)
+
+frmLangABPow = ttk.Labelframe(frmOperationLang, padding= '10px', text="Potencia de lenguajes")
+frmLangABPow.grid(row = 2, column = 0, sticky = 'nsew')
+
+opt2 = IntVar()
+tk.Radiobutton(frmLangABPow, text="(LA)^n", variable=opt2, value=1).grid(row = 0, column = 0, pady = 5)
+tk.Radiobutton(frmLangABPow, text="(LB)^n", variable=opt2, value=2).grid(row = 0, column = 1, pady = 5)
+tk.Radiobutton(frmLangABPow, text="(LAuLB)^n", variable=opt2, value=3).grid(row = 0, column = 2, pady = 5)
+txNPow = tk.Text(frmLangABPow, height = 1, width = 7)
+txNPow.grid(row = 1, column = 0, pady = 5)
+tk.Button(frmLangABPow, text = "Generar Potencia").grid(row = 1, column = 1, pady = 5)
+
+lblABPow = tk.Label(frmLangABPow, text="(...)^n:", fg="black", font=("Comic Sans MS", 10))
+lblABPow.grid( row = 2, column = 0, pady = 5)
+txABPow = tk.Text(frmLangABPow, height = 5, width = 20)
+txABPow.bind("<Key>", lambda readOnly: "break")
+txABPow.grid(row = 2, column = 1, pady = 5, columnspan = 2)
+
+frmLangABInver = ttk.Labelframe(frmOperationLang, padding= '10px', text="Lenguajes Invertidos")
+frmLangABInver.grid(row = 2, column = 1, sticky = 'nsew')
+
+opt3 = IntVar()
+tk.Radiobutton(frmLangABInver, text="(LA)^-1", variable=opt3, value=1).grid(row = 0, column = 0, pady = 5)
+tk.Radiobutton(frmLangABInver, text="(LB)^-1", variable=opt3, value=2).grid(row = 0, column = 1, pady = 5)
+tk.Radiobutton(frmLangABInver, text="(LAuLB)^-1", variable=opt3, value=3).grid(row = 0, column = 2, pady = 5)
+txNInver = tk.Text(frmLangABInver, height = 1, width = 7)
+txNInver.grid(row = 1, column = 0, pady = 5)
+tk.Button(frmLangABInver, text = "Generar Ineversa").grid(row = 1, column = 1, pady = 5)
+
+lblABInver = tk.Label(frmLangABInver, text="(...)^-1:", fg="black", font=("Comic Sans MS", 10))
+lblABInver.grid( row = 2, column = 0, pady = 5)
+txABInver = tk.Text(frmLangABInver, height = 5, width = 20)
+txABInver.bind("<Key>", lambda readOnly: "break")
+txABInver.grid(row = 2, column = 1, pady = 5, columnspan = 2)
+
+
+
 
 #tabs.tab( 2, state = 'normal')
 tabs.place(relx = 0.5, rely = 0.5, anchor = tk.CENTER)
