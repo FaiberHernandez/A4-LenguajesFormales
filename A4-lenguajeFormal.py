@@ -122,7 +122,7 @@ window = tk.Tk()
 window.title('Actividad 4 - LenguajesFormales')
 window.geometry("1024x800+50+50")
 window.minsize(1000,800)
-window.configure(bg = "gray")
+window.configure(bg = "DarkSlateGrey")
 
 #creando las pestañas
 tabs = ttk.Notebook(window)
