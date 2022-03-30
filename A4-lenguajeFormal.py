@@ -3,8 +3,75 @@ from tkinter import IntVar, ttk
 from tkinter import messagebox
 import random
 import itertools
-from itertools import product
 
+#potenciar
+def potenciar(valor, potencia, A, B, union):
+    txABPow.delete("1.0", "end")
+    if valor == 1:
+        vector = A.split()
+    elif valor == 2:
+        vector = B.split()
+    else:
+        vector = union.split()
+
+   
+
+#concatenar lenguajes
+def concatenar(A, B):
+    concatenacion = []
+    for i in A:
+        for j in B:
+            concatenacion.append(i+j)
+    txLangABConcat.insert(1.0, concatenacion)
+
+#intersecar lenguajes
+def intersecarLan(A, B):
+    interseccionLan = []
+    for sim in A:
+        if sim in B:
+            interseccionLan.append(sim)
+    if len(interseccionLan) == 0:
+        txLangABInter.insert(1.0, "ø")
+    else:
+        txLangABInter.insert(1.0, interseccionLan)
+
+#restar lenguajes
+def restarLan(A, B):
+    lanAMenosB = []
+    lanBMenosA = []
+    for sim in A:
+        if sim not in B:
+            lanAMenosB.append(sim)
+            
+    for sim in B:
+        if sim not in A:
+            lanBMenosA.append(sim)
+
+    if len(lanAMenosB) == 0:
+        txLangABminus.insert(1.0, "ø")
+    else:
+        txLangABminus.insert(1.0, lanAMenosB)
+        
+    if len(lanBMenosA) == 0:
+        txLangBAminus.insert(1.0, "ø")
+    else:
+        txLangBAminus.insert(1.0, lanBMenosA)
+            
+#unir lenguajes
+def unirLan(A, B):
+    unionLan = A[:]
+    for sim in B:
+        if sim not in unionLan:
+            unionLan.append(sim)
+    txLangABUnion.insert(1.0, unionLan)
+
+#operar lenguajes
+def operarLan(A, B):
+    unirLan(A, B)
+    restarLan(A, B)
+    intersecarLan(A, B)
+    concatenar(A, B)
+    
 #intersecar abecedarios
 def intersecarAbc(A, B):
     interseccionAbc = []
@@ -12,7 +79,7 @@ def intersecarAbc(A, B):
         if sim in B:
             interseccionAbc.append(sim)
     if len(interseccionAbc) == 0:
-        txABInter.insert(1.0, "¢")
+        txABInter.insert(1.0, "ø")
     else:
         txABInter.insert(1.0, interseccionAbc)
 
@@ -29,12 +96,12 @@ def restarAbc(A, B):
             abcBMenosA.append(sim)
 
     if len(abcAMenosB) == 0:
-        txABminus.insert(1.0, "¢")
+        txABminus.insert(1.0, "ø")
     else:
         txABminus.insert(1.0, abcAMenosB)
         
     if len(abcBMenosA) == 0:
-        txBAminus.insert(1.0, "¢")
+        txBAminus.insert(1.0, "ø")
     else:
         txBAminus.insert(1.0, abcBMenosA)
             
@@ -71,14 +138,27 @@ def generarLenguaje(abc, cant):
 
     return palabras.split()
 
-#guardar lenguajes
-def guardarLenguajes(A, B):
-    global lenA
-    lenA = generarLenguaje(A, 5)
-    lenB = generarLenguaje(B, 5)
+#limpiar campos lenguajes
+def limpiarCamposLen():
+    txLangA.delete("1.0", "end")
+    txLangB.delete("1.0", "end")
+    txLangABUnion.delete("1.0", "end")
+    txLangABminus.delete("1.0", "end")
+    txLangBAminus.delete("1.0", "end")
+    txLangABInter.delete("1.0", "end")
+    txLangABConcat.delete("1.0", "end")
 
-#limpiar campos
-def limpiarCampos():
+#guardar lenguajes
+def guardarLenguajes(cant, A, B):
+    lenA = generarLenguaje(A.split(), int(cant))
+    lenB = generarLenguaje(B.split(), int(cant))
+    limpiarCamposLen()
+    operarLan(lenA, lenB)
+    txLangA.insert(1.0, lenA)
+    txLangB.insert(1.0, lenB)
+
+#limpiar campos abecedarios
+def limpiarCamposAbc():
     txAbcA.delete("1.0", "end")
     txAbcB.delete("1.0", "end")
     txABUnion.delete("1.0", "end")
@@ -105,8 +185,8 @@ def cerraduraEstrella(valor, cantidad, A, B, union):
 def guardarAbecedarios(A, B):
     abcA = A.split()
     abcB = B.split()
-    guardarLenguajes(abcA, abcB)
-    limpiarCampos()
+    limpiarCamposAbc()
+    limpiarCamposLen()
     operarAbc(abcA, abcB)
     txAbcA.insert(1.0, abcA)
     txAbcB.insert(1.0, abcB)
@@ -134,7 +214,7 @@ tabs.add(frmHome, text = "Inicio")
 
 lblWelcome = tk.Label(frmHome, text="Bienvenido a la Actividad de lenguaje formal.", fg="blue", font=("Comic Sans MS", 15) )
 lblWelcome.pack()
-lblMsgHome = tk.Label(frmHome, text="A continuación ingrese dos alfabetos.\nCada simbolo separado por un espacio. \n para vacio use: ¢ (alt + 155)", fg="black", font=("Comic Sans MS", 12))
+lblMsgHome = tk.Label(frmHome, text="A continuación ingrese dos alfabetos.\nCada simbolo separado por un espacio. \n para vacio use: ø (alt + 155)", fg="black", font=("Comic Sans MS", 12))
 lblMsgHome.pack()
 
 #Home Inputs
@@ -226,8 +306,6 @@ txABstar = tk.Text(frmABstar, height = 5, width = 20)
 txABstar.bind("<Key>", lambda readOnly: "break")
 txABstar.grid(row = 2, column = 1, pady = 5,columnspan = 2)
 
-
-
 #Language tab
 frmlanguage= ttk.Frame(tabs, padding= '20px')
 tabs.add(frmlanguage, text = "Lenguajes")
@@ -235,14 +313,12 @@ tabs.add(frmlanguage, text = "Lenguajes")
 frmLangs =ttk.Labelframe(frmlanguage, padding= '10px', text="Sea LA y LB lenguajes:")
 frmLangs.pack(fill = 'both')
 
-
 lblWordsPerLang = tk.Label(frmLangs, text="Inserte la cantidad de \n palabras para los lenguajes:", fg="red", font=("Comic Sans MS", 10))
 lblWordsPerLang.grid( row = 0, column = 0, pady = 5)
 txWordsPerLang = tk.Text(frmLangs, height = 1, width = 10)
 txWordsPerLang.grid(row = 0, column = 1, pady = 5)
 
-tk.Button(frmLangs, text = "Generar lenguajes").grid(row = 0, column = 2, pady = 5)
-
+tk.Button(frmLangs, text = "Generar lenguajes", command=lambda: guardarLenguajes(txWordsPerLang.get("1.0", "end"), txAbcA.get("1.0", "end"), txAbcB.get("1.0", "end"))).grid(row = 0, column = 2, pady = 5)
 
 lblLangA = tk.Label(frmLangs, text="LA: ", fg="black", font=("Comic Sans MS", 10))
 lblLangA.grid( row = 1, column = 0, pady = 5)
@@ -317,7 +393,7 @@ tk.Radiobutton(frmLangABPow, text="(LB)^n", variable=opt2, value=2).grid(row = 0
 tk.Radiobutton(frmLangABPow, text="(LAuLB)^n", variable=opt2, value=3).grid(row = 0, column = 2, pady = 5)
 txNPow = tk.Text(frmLangABPow, height = 1, width = 7)
 txNPow.grid(row = 1, column = 0, pady = 5)
-tk.Button(frmLangABPow, text = "Generar Potencia").grid(row = 1, column = 1, pady = 5)
+tk.Button(frmLangABPow, text = "Generar Potencia", command=lambda: potenciar(opt2.get(), txNPow.get("1.0", "end"), txLangA.get("1.0", "end"), txLangB.get("1.0", "end"), txLangABUnion.get("1.0", "end"))).grid(row = 1, column = 1, pady = 5)
 
 lblABPow = tk.Label(frmLangABPow, text="(...)^n:", fg="black", font=("Comic Sans MS", 10))
 lblABPow.grid( row = 2, column = 0, pady = 5)
@@ -341,9 +417,6 @@ lblABInver.grid( row = 2, column = 0, pady = 5)
 txABInver = tk.Text(frmLangABInver, height = 5, width = 20)
 txABInver.bind("<Key>", lambda readOnly: "break")
 txABInver.grid(row = 2, column = 1, pady = 5, columnspan = 2)
-
-
-
 
 #tabs.tab( 2, state = 'normal')
 tabs.place(relx = 0.5, rely = 0.5, anchor = tk.CENTER)
