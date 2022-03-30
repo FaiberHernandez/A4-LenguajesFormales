@@ -1,11 +1,20 @@
 import tkinter as tk
-from tkinter import IntVar, ttk
+from tkinter import IntVar, Variable, ttk
 from tkinter import messagebox
 import random
 import itertools
+import re
 
 #potenciar
 def potenciar(valor, potencia, A, B, union):
+    
+    numValidate = re.compile('^[1-9]*[0-9]$')
+    
+    if not re.match(numValidate, potencia):
+        messagebox.showwarning(message="Por favor ingrese un número entero positivo.", title="Advertencia")
+        txNPow.configure( bg = 'indian red')
+        return
+    
     txABPow.delete("1.0", "end")
     if valor == 1:
         vector = A.split()
@@ -13,6 +22,9 @@ def potenciar(valor, potencia, A, B, union):
         vector = B.split()
     else:
         vector = union.split()
+    
+    txNPow.configure(bg = 'spring green')
+    
 
    
 
@@ -147,15 +159,26 @@ def limpiarCamposLen():
     txLangBAminus.delete("1.0", "end")
     txLangABInter.delete("1.0", "end")
     txLangABConcat.delete("1.0", "end")
+    txNPow.configure( bg = 'indian red')
+    txWordsPerLang.configure( bg = 'indian red')
 
 #guardar lenguajes
 def guardarLenguajes(cant, A, B):
+    
+    numValidate = re.compile('^[1-9]*[0-9]$')
+    
+    if not re.match(numValidate, cant):
+        messagebox.showwarning(message="Por favor ingrese un número entero positivo.", title="Advertencia")
+        txWordsPerLang.configure( bg = 'indian red')
+        return
+
     lenA = generarLenguaje(A.split(), int(cant))
     lenB = generarLenguaje(B.split(), int(cant))
     limpiarCamposLen()
     operarLan(lenA, lenB)
     txLangA.insert(1.0, lenA)
     txLangB.insert(1.0, lenB)
+    txWordsPerLang.configure(bg = 'spring green')
 
 #limpiar campos abecedarios
 def limpiarCamposAbc():
@@ -166,9 +189,18 @@ def limpiarCamposAbc():
     txABminus.delete("1.0", "end")
     txABInter.delete("1.0", "end")
     txABstar.delete("1.0", "end")
+    txNstars.configure(bg = 'indian red')
 
 #cerradura estrella
 def cerraduraEstrella(valor, cantidad, A, B, union):
+    
+    numValidate = re.compile('^[1-9]*[0-9]$')
+    
+    if not re.match(numValidate, cantidad):
+        messagebox.showwarning(message="Por favor ingrese un número entero positivo.", title="Advertencia")
+        txNstars.configure(bg = 'indian red')
+        return
+        
     txABstar.delete("1.0", "end")
     vector = []
     if valor == 1:
@@ -180,9 +212,14 @@ def cerraduraEstrella(valor, cantidad, A, B, union):
         
     cerradura = generarLenguaje(vector, int(cantidad))
     txABstar.insert(1.0, cerradura)
+    txNstars.configure( bg = 'spring green')
         
 #guardar abecedarios
 def guardarAbecedarios(A, B):
+    if (A == '') or (B == ''):
+        messagebox.showwarning(message="Por favor ingrese dos alfabetos", title="Advertencia")
+        return
+    
     abcA = A.split()
     abcB = B.split()
     limpiarCamposAbc()
@@ -193,6 +230,8 @@ def guardarAbecedarios(A, B):
     tabs.tab( 1, state = 'normal')
     tabs.tab( 2, state = 'normal')
     tabs.select(1)
+    
+    messagebox.showinfo(message="Alfabetos procesados con exíto", title="Hecho")
         
 def operateSets():
     arbol = 1
@@ -236,7 +275,7 @@ btnRun.pack()
 
 #Alphabet tab
 frmAlphabet = ttk.Frame(tabs, padding= '20px')
-tabs.add(frmAlphabet, text = "Alfabetos")
+tabs.add(frmAlphabet, text = "Alfabetos", state = 'disabled')
 
 frmAbcs = ttk.Labelframe(frmAlphabet, padding= '10px', text="Alfabetos:")
 frmAbcs.pack(fill = 'both')
@@ -293,10 +332,11 @@ frmABstar = ttk.Labelframe(frmOperation, padding= '10px', text="Cerradura de Est
 frmABstar.grid(row = 1, column = 1, sticky = 'nsew')
 
 opt = IntVar()
+opt.set(1)
 tk.Radiobutton(frmABstar, text="(A)*", variable=opt, value=1).grid(row = 0, column = 0, pady = 5)
 tk.Radiobutton(frmABstar, text="(B)*", variable=opt, value=2).grid(row = 0, column = 1, pady = 5)
 tk.Radiobutton(frmABstar, text="(AuB)*", variable=opt, value=3).grid(row = 0, column = 2, pady = 5)
-txNstars = tk.Text(frmABstar, height = 1, width = 5)
+txNstars = tk.Text(frmABstar, height = 1, width = 5, bg = "indian red")
 txNstars.grid(row = 1, column = 0, pady = 5)
 tk.Button(frmABstar, text = "Generar cerradura de estrella", command=lambda: cerraduraEstrella(opt.get(), txNstars.get("1.0", "end"), txAbcA.get("1.0", "end"), txAbcB.get("1.0", "end"), txABUnion.get("1.0", "end"))).grid(row = 1, column = 1, pady = 5)
 
@@ -308,14 +348,14 @@ txABstar.grid(row = 2, column = 1, pady = 5,columnspan = 2)
 
 #Language tab
 frmlanguage= ttk.Frame(tabs, padding= '20px')
-tabs.add(frmlanguage, text = "Lenguajes")
+tabs.add(frmlanguage, text = "Lenguajes", state = 'disabled')
 
 frmLangs =ttk.Labelframe(frmlanguage, padding= '10px', text="Sea LA y LB lenguajes:")
 frmLangs.pack(fill = 'both')
 
 lblWordsPerLang = tk.Label(frmLangs, text="Inserte la cantidad de \n palabras para los lenguajes:", fg="red", font=("Comic Sans MS", 10))
 lblWordsPerLang.grid( row = 0, column = 0, pady = 5)
-txWordsPerLang = tk.Text(frmLangs, height = 1, width = 10)
+txWordsPerLang = tk.Text(frmLangs, height = 1, width = 10, bg = "indian red")
 txWordsPerLang.grid(row = 0, column = 1, pady = 5)
 
 tk.Button(frmLangs, text = "Generar lenguajes", command=lambda: guardarLenguajes(txWordsPerLang.get("1.0", "end"), txAbcA.get("1.0", "end"), txAbcB.get("1.0", "end"))).grid(row = 0, column = 2, pady = 5)
@@ -378,20 +418,21 @@ txLangABInter.grid(row = 0, column = 1, pady = 5)
 frmLangABConcat = ttk.Labelframe(frmOperationLang, padding= '10px', text="Cocatenación (LA.LB)")
 frmLangABConcat.grid(row = 1, column = 1, sticky = 'nsew', padx = 2)
 
-lblLangABConcat = tk.Label(frmLangABConcat, text="(LALB):", fg="black", font=("Comic Sans MS", 10))
+lblLangABConcat = tk.Label(frmLangABConcat, text="(LA.LB):", fg="black", font=("Comic Sans MS", 10))
 lblLangABConcat.grid( row = 0, column = 0, pady = 5)
 txLangABConcat = tk.Text(frmLangABConcat, height = 2, width = 20)
 txLangABConcat.bind("<Key>", lambda readOnly: "break")
 txLangABConcat.grid(row = 0, column = 1, pady = 5)
 
 frmLangABPow = ttk.Labelframe(frmOperationLang, padding= '10px', text="Potencia de lenguajes")
-frmLangABPow.grid(row = 2, column = 0, sticky = 'nsew')
+frmLangABPow.grid(row = 2, column = 0, sticky = 'nsew', padx = 2)
 
 opt2 = IntVar()
-tk.Radiobutton(frmLangABPow, text="(LA)^n", variable=opt2, value=1).grid(row = 0, column = 0, pady = 5)
+opt2.set(1)
+tk.Radiobutton(frmLangABPow, text="(LA)^n", variable=opt2, value=1, state ='active').grid(row = 0, column = 0, pady = 5)
 tk.Radiobutton(frmLangABPow, text="(LB)^n", variable=opt2, value=2).grid(row = 0, column = 1, pady = 5)
 tk.Radiobutton(frmLangABPow, text="(LAuLB)^n", variable=opt2, value=3).grid(row = 0, column = 2, pady = 5)
-txNPow = tk.Text(frmLangABPow, height = 1, width = 7)
+txNPow = tk.Text(frmLangABPow, height = 1, width = 7, bg = "indian red")
 txNPow.grid(row = 1, column = 0, pady = 5)
 tk.Button(frmLangABPow, text = "Generar Potencia", command=lambda: potenciar(opt2.get(), txNPow.get("1.0", "end"), txLangA.get("1.0", "end"), txLangB.get("1.0", "end"), txLangABUnion.get("1.0", "end"))).grid(row = 1, column = 1, pady = 5)
 
@@ -401,16 +442,15 @@ txABPow = tk.Text(frmLangABPow, height = 5, width = 20)
 txABPow.bind("<Key>", lambda readOnly: "break")
 txABPow.grid(row = 2, column = 1, pady = 5, columnspan = 2)
 
-frmLangABInver = ttk.Labelframe(frmOperationLang, padding= '10px', text="Lenguajes Invertidos")
+frmLangABInver = ttk.Labelframe(frmOperationLang, padding= '10px', text="Invertir Lenguaje")
 frmLangABInver.grid(row = 2, column = 1, sticky = 'nsew')
 
 opt3 = IntVar()
-tk.Radiobutton(frmLangABInver, text="(LA)^-1", variable=opt3, value=1).grid(row = 0, column = 0, pady = 5)
+opt3.set(1)
+asas = tk.Radiobutton(frmLangABInver, text="(LA)^-1", variable=opt3, value=1, state ='active', ).grid(row = 0, column = 0, pady = 5)
 tk.Radiobutton(frmLangABInver, text="(LB)^-1", variable=opt3, value=2).grid(row = 0, column = 1, pady = 5)
 tk.Radiobutton(frmLangABInver, text="(LAuLB)^-1", variable=opt3, value=3).grid(row = 0, column = 2, pady = 5)
-txNInver = tk.Text(frmLangABInver, height = 1, width = 7)
-txNInver.grid(row = 1, column = 0, pady = 5)
-tk.Button(frmLangABInver, text = "Generar Ineversa").grid(row = 1, column = 1, pady = 5)
+tk.Button(frmLangABInver, text = "Generar Inversa").grid(row = 1, column = 1, pady = 5)
 
 lblABInver = tk.Label(frmLangABInver, text="(...)^-1:", fg="black", font=("Comic Sans MS", 10))
 lblABInver.grid( row = 2, column = 0, pady = 5)
