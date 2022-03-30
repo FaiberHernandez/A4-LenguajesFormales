@@ -6,6 +6,34 @@ import itertools
 import re
 import math
 
+#invertir
+def invertir(valor, A, B, union):
+    txABInver.delete("1.0", "end")
+    if valor == 1:
+        vector = A.split()
+    elif valor == 2:
+        vector = B.split()
+    else:
+        vector = union.split()
+
+    if len(vector) == 0:
+        messagebox.showwarning(message="Por favor primero genere los lenguajes.", title="Advertencia")
+        txNPow.configure( bg = 'indian red')
+        return
+    inverso = []
+    aux = []
+    for i in vector:
+        aux.append(list(reversed(i)))
+
+    palabras = ""
+    for i in aux:
+        for j in i:
+            print(j)
+            palabras += j
+        palabras += " "
+    inverso.extend(palabras.split())
+    txABInver.insert(1.0, inverso)
+
 #potenciar
 def potenciar(valor, potencia, A, B, union):
     
@@ -47,9 +75,6 @@ def potenciar(valor, potencia, A, B, union):
             aux = concatenacion
         txABPow.insert(1.0, vecPoten)
     txNPow.configure(bg = 'spring green')
-    
-
-   
 
 #concatenar lenguajes
 def concatenar(A, B):
@@ -194,6 +219,7 @@ def limpiarCamposLen():
     txLangBAminus.delete("1.0", "end")
     txLangABInter.delete("1.0", "end")
     txLangABConcat.delete("1.0", "end")
+    txABInver.delete("1.0", "end")
     txABPow.delete("1.0", "end")
     txNPow.configure( bg = 'indian red')
     txWordsPerLang.configure( bg = 'indian red')
@@ -489,7 +515,7 @@ opt3.set(1)
 asas = tk.Radiobutton(frmLangABInver, text="(LA)^-1", variable=opt3, value=1, state ='active', ).grid(row = 0, column = 0, pady = 5)
 tk.Radiobutton(frmLangABInver, text="(LB)^-1", variable=opt3, value=2).grid(row = 0, column = 1, pady = 5)
 tk.Radiobutton(frmLangABInver, text="(LAuLB)^-1", variable=opt3, value=3).grid(row = 0, column = 2, pady = 5)
-tk.Button(frmLangABInver, text = "Generar Inversa").grid(row = 1, column = 1, pady = 5)
+tk.Button(frmLangABInver, text = "Generar Inversa", command=lambda: invertir(opt3.get(), txLangA.get("1.0", "end"), txLangB.get("1.0", "end"), txLangABUnion.get("1.0", "end"))).grid(row = 1, column = 1, pady = 5)
 
 lblABInver = tk.Label(frmLangABInver, text="(...)^-1:", fg="black", font=("Comic Sans MS", 10))
 lblABInver.grid( row = 2, column = 0, pady = 5)
